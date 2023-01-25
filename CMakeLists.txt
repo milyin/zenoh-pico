@@ -176,6 +176,31 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/zenoh-pico
   COMPONENT Headers
 )
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/zenohpico.pc.in ${CMAKE_CURRENT_BINARY_DIR}/${Libname}.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${Libname}.pc 
+  DESTINATION lib/pkgconfig
+)
+
+# Generate <Package>Config.cmake
+include(CMakePackageConfigHelpers)
+configure_package_config_file(PackageConfig.cmake.in ${Libname}Config.cmake
+  INSTALL_DESTINATION lib/cmake/${Libname}
+)
+
+# Generate <Package>Version.cmake
+write_basic_package_version_file(
+  ${Libname}ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${Libname}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${Libname}ConfigVersion.cmake"
+  DESTINATION lib/cmake/${Libname}
+  COMPONENT dev)
+
+
 if(BUILD_EXAMPLES)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/examples)
 
